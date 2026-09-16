@@ -4,7 +4,7 @@
  *
  * canonical 은 항상 자기 자신, hreflang 은 언어 목록에서 자동 계산한다 —
  * 템플릿(순수 HTML)에서 페이지마다 손으로 복사하던 부분이다. (헌법 §4 · §5)
- * 모든 URL 은 https://prelaps.com/photo/... 절대 주소, 끝 슬래시 없음.
+ * 모든 URL 은 https://prelaps.com/idphoto/... 절대 주소, 끝 슬래시 없음.
  */
 import '../styles/global.css';
 import LanguageSwitcher from '../components/LanguageSwitcher.astro';
@@ -60,7 +60,7 @@ const ld = {
     <meta property="og:url" content={canonical}>
     <meta property="og:title" content={title}>
     <meta property="og:description" content={description}>
-    <meta property="og:image" content="https://prelaps.com/photo/og.png">
+    <meta property="og:image" content="https://prelaps.com/idphoto/og.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content={t('meta.ogAlt')}>
@@ -73,7 +73,7 @@ const ld = {
 <div class="wrap">
   <header>
     <div>
-      <!-- 허브로 나가는 링크. 허브는 /photo 밖이라 base 없이 쓴다. -->
+      <!-- 허브로 나가는 링크. 허브는 /idphoto 밖이라 base 없이 쓴다. -->
       <a class="home" href={`/${lang}`}>prelaps</a>
       <h1>{title}</h1>
       <p class="tagline">{t('head.tagline')}</p>
@@ -83,10 +83,10 @@ const ld = {
 
   <slot />
 
-  <!-- 정책은 허브에 하나씩 (헌법 §8). #photo 은 허브 privacy 의 서비스별 블록 id 와 같아야 한다. -->
+  <!-- 정책은 허브에 하나씩 (헌법 §8). #idphoto 은 허브 privacy 의 서비스별 블록 id 와 같아야 한다. -->
   <footer>
     <a href={`/${lang}`}>{t("footer.home")}</a>{" · "}
-    <a href={`/${lang}/privacy#photo`}>{t("footer.privacy")}</a>{" · "}
+    <a href={`/${lang}/privacy#idphoto`}>{t("footer.privacy")}</a>{" · "}
     <a href={`/${lang}/terms`}>{t("footer.terms")}</a>{" · "}
     <a href={`/${lang}/contact`}>{t("footer.contact")}</a>
   </footer>

@@ -19,8 +19,8 @@ export function useTranslations(lang: Locale) {
 
 /**
  * 언어 없는 경로 → 실제 경로. 끝 슬래시를 붙이지 않는다 (trailingSlash: 'never').
- *   localizePath('ko')          → '/photo/ko'
- *   localizePath('ja', '/us')  → '/photo/ja/jtd'
+ *   localizePath('ko')          → '/idphoto/ko'
+ *   localizePath('ja', '/us')   → '/idphoto/ja/us'
  */
 export function localizePath(lang: Locale, path = ''): string {
   return `${BASE}/${lang}${path}`;

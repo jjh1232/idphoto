@@ -1,9 +1,9 @@
 /**
- * prelaps.com/photo/* 를 dist/(Astro 빌드 결과) 에 잇는 얇은 층 + 루트의 언어 분기.
+ * prelaps.com/idphoto/* 를 dist/(Astro 빌드 결과) 에 잇는 얇은 층 + 루트의 언어 분기.
  *
  * Workers Assets 에는 "이 경로 아래에 자산을 붙인다" 는 설정이 없다.
  * 자산의 파일 경로가 곧 URL 경로라서, 그냥 두면
- * prelaps.com/photo/_astro/x.css 가 dist/photo/_astro/x.css 를 찾는다.
+ * prelaps.com/idphoto/_astro/x.css 가 dist/idphoto/_astro/x.css 를 찾는다.
  * 그래서 접두사를 여기서 떼어낸다. (race/worker/index.js 와 같은 구조)
  *
  * 이 파일 자체는 변환 없이 그대로 올라간다. 페이지는 astro build 가 dist/ 에 만든다.
@@ -13,7 +13,7 @@
 const CANONICAL_HOST = 'prelaps.com';
 
 /** prelaps.com 에서 이 도구가 사는 자리. */
-const PREFIX = '/photo';
+const PREFIX = '/idphoto';
 
 /**
  * 실제로 있는 언어판. 순서가 곧 우선순위다.
@@ -112,16 +112,16 @@ export default {
     const url = new URL(request.url);
 
     // 접두사가 없는 요청은 손대지 않는다.
-    // 라우트가 prelaps.com/photo/* 라서 원래 여기 올 수 없지만, 라우트 설정이
+    // 라우트가 prelaps.com/idphoto/* 라서 원래 여기 올 수 없지만, 라우트 설정이
     // 바뀌었을 때 조용히 경로를 망가뜨리지 않도록 막아둔다. 앞 N글자를 무조건 자르면
     // /styles.css 가 "s" 가 되어 404 가 난다.
-    // /photoxyz 처럼 접두사로 「시작만」 하는 경로는 우리 것이 아니다. 앞 N글자를 무조건 자르면 안 된다.
+    // /idphotoxyz 처럼 접두사로 「시작만」 하는 경로는 우리 것이 아니다. 앞 N글자를 무조건 자르면 안 된다.
     const ours = url.pathname === PREFIX || url.pathname.startsWith(PREFIX + "/");
     if (url.hostname !== CANONICAL_HOST || !ours) {
       return withHeadScripts(await env.ASSETS.fetch(request));
     }
 
-    // /photo/en -> /en   자산은 dist/ 루트 기준이다 (html_handling 이 /en 을 en.html 로 잇는다).
+    // /idphoto/en -> /en   자산은 dist/ 루트 기준이다 (html_handling 이 /en 을 en.html 로 잇는다).
     const path = url.pathname.slice(PREFIX.length) || '/';
 
     // ── 루트는 언어판으로 넘긴다 ────────────────────────────
@@ -131,7 +131,7 @@ export default {
     // 첫 방문자의 언어를 뒤따라오는 전원에게 준다 — 엣지는 `Accept-Encoding` 외의
     // `Vary` 를 무시하기 때문이다. (헌법 §5)
     //
-    // /photo/ko 같은 언어판 주소 자체는 절대 건드리지 않는다.
+    // /idphoto/ko 같은 언어판 주소 자체는 절대 건드리지 않는다.
     // 건드리면 언어 전환 UI 가 죽는다.
     if (path === '/' || path === '') {
       const lang = pickLang(request.headers.get('accept-language'));
@@ -147,7 +147,7 @@ export default {
       });
     }
 
-    // 404 안내 페이지 자체(/photo/404, /photo/404.html)를 주소로 열면 200 으로 나간다.
+    // 404 안내 페이지 자체(/idphoto/404, /idphoto/404.html)를 주소로 열면 200 으로 나간다.
     // 없는 주소와 같은 취급으로 status 404 를 돌려준다.
     if (/^\/404(\.html)?\/?$/.test(path)) {
       const page = await env.ASSETS.fetch(new Request(new URL('/404', url), request));
@@ -168,7 +168,7 @@ export default {
     const response = await env.ASSETS.fetch(new Request(url, request));
 
     // 자산 층이 돌려주는 리다이렉트의 Location 은 dist/ 루트 기준이라 접두사가 빠져 있다.
-    // 그대로 흘려보내면 도구 밖으로 튕긴다 — /photo/ko/index.html 의 Location 이
+    // 그대로 흘려보내면 도구 밖으로 튕긴다 — /idphoto/ko/index.html 의 Location 이
     // /ko/ 로 나가서 허브의 한국어 페이지로 가버린다.
     const location = response.headers.get('location');
     if (!location) return withHeadScripts(response);

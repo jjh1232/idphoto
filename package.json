@@ -1,7 +1,7 @@
 {
-  "name": "photo",
+  "name": "idphoto",
   "private": true,
-  "description": "증명사진 규격 맞추기 — prelaps.com/photo. Astro 정적 빌드 → Workers Static Assets.",
+  "description": "증명사진 규격 맞추기 — prelaps.com/idphoto. Astro 정적 빌드 → Workers Static Assets.",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
