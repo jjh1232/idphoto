@@ -1,0 +1,19 @@
+{
+  "name": "photo",
+  "private": true,
+  "description": "증명사진 규격 맞추기 — prelaps.com/photo. Astro 정적 빌드 → Workers Static Assets.",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "wrangler dev",
+    "check": "astro check",
+    "deploy": "astro build && npx wrangler deploy",
+    "og": "node test/og.mjs",
+    "verify": "node test/verify.cjs"
+  },
+  "type": "module",
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^7.2.2"
+  }
+}

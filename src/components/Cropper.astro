@@ -1,0 +1,120 @@
+---
+/**
+ * 자르기 화면.
+ *
+ * 배치는 「위 = 무엇을 만들지 + 결과, 가운데 = 자르기, 오른쪽 = 어떻게 자를지」다.
+ * 출력 설정(해상도·용량)은 한 번 정하면 잘 안 건드리므로 위에 한 줄로 접어 두고,
+ * 자르는 동안 계속 만지는 것(규격·확대·보정)만 틀 옆에 둔다.
+ * 결과·내려받기도 위다 — 레일이 길어서 아래에 두면 저장할 때마다 내려야 한다.
+ *
+ * 문구는 전부 locales 의 `ui.*` 에서 온다. 스크립트가 읽을 것은 빌드 때 JSON 으로
+ * 박아 둔다 — 스크립트에 문장을 두면 언어판을 늘릴 때 조용히 한국어가 남는다.
+ *
+ * 각 요소는 id 가 아니라 `data-el` 로 찾는다. 한 페이지에 두 벌이 올라가도 안 부딪친다.
+ */
+import { cropperStrings } from '../i18n/utils';
+import type { Locale } from '../i18n/config';
+import '../styles/cropper.css';
+
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = cropperStrings(lang);
+---
+<section class="cropper" data-cropper data-strings={JSON.stringify(t)}>
+  <!-- 사진 받기. 드롭·클릭·붙여넣기 셋 다 받는다. -->
+  <div class="drop" data-el="drop" tabindex="0" role="button" aria-label={t['drop.title']}>
+    <p class="drop-t">{t['drop.title']}</p>
+    <p class="drop-h">{t['drop.hint']}</p>
+    <p class="privacy">{t['drop.privacy']}</p>
+    <input type="file" data-el="file" accept="image/*" hidden>
+  </div>
+
+  <div class="work" data-el="work" hidden>
+
+    <!-- ── 위: 무엇을 만들지 ───────────────────────────────── -->
+    <div class="bar">
+      <div class="bar-group">
+        <span class="bar-k" title={t['panel.dpiNote']}>{t['panel.dpi']}</span>
+        <div class="chips" data-el="dpis"></div>
+      </div>
+      <div class="bar-group">
+        <span class="bar-k" title={t['panel.capNote']}>{t['panel.cap']}</span>
+        <div class="chips" data-el="caps"></div>
+      </div>
+      <div class="bar-file">
+        <span class="fname" data-el="fname"></span>
+        <span class="fmeta" data-el="fmeta"></span>
+      </div>
+    </div>
+
+    <!-- 결과와 내려받기. **틀 위에** 둔다 — 아래에 두면 레일이 길어질수록
+         저장하려고 스크롤을 내려야 한다. 화면에 붙어 따라다니게 한다. -->
+    <div class="out">
+      <div class="out-n">
+        <p class="px" data-el="px"></p>
+        <p class="mm" data-el="mm"></p>
+      </div>
+      <p class="saveinfo" data-el="saveinfo"></p>
+      <div class="acts">
+        <button type="button" class="small" data-el="reset">{t['save.reset']}</button>
+        <button type="button" class="go" data-el="save">{t['save.button']}</button>
+      </div>
+    </div>
+
+    <!-- ── 가운데 + 오른쪽 ─────────────────────────────────── -->
+    <div class="stage">
+      <!-- 사진 전체를 펼치고 그 위에 자르는 틀을 겹친다. 틀 밖은 어둡게 덮는다. -->
+      <div class="board" data-el="stage"><canvas data-el="cv"></canvas></div>
+
+      <aside class="rail">
+        <section class="rail-s">
+          <h2>{t['panel.size']}</h2>
+          <div class="sizes" data-el="sizes"></div>
+        </section>
+
+        <section class="rail-s">
+          <h2>{t['panel.crop']}</h2>
+          <p class="hint">{t['crop.hint']}</p>
+          <label class="rng">
+            <span>{t['zoom.label']}</span>
+            <input type="range" data-el="zoom" min="100" max="800" value="100" step="1">
+            <output data-el="zoomv">100%</output>
+          </label>
+          <div class="row">
+            <button type="button" class="small" data-el="fit">{t['crop.fit']}</button>
+            <label class="chk">
+              <input type="checkbox" data-el="showguide" checked>
+              {t['guide.show']}
+            </label>
+          </div>
+          <p class="src">{t['guide.srcLabel']} <span data-el="guidesrc"></span></p>
+        </section>
+
+        <section class="rail-s" data-el="adjust">
+          <h2>{t['panel.adjust']}</h2>
+          <label class="rng">
+            <span>{t['adjust.bright']}</span>
+            <input type="range" data-el="bright" min="60" max="150" value="100" step="1">
+            <output data-el="brightv">100%</output>
+          </label>
+          <label class="rng">
+            <span>{t['adjust.contrast']}</span>
+            <input type="range" data-el="contrast" min="60" max="150" value="100" step="1">
+            <output data-el="contrastv">100%</output>
+          </label>
+          <!-- 규정이 있는 규격에서 보인다. 잠근 이유를 말해 주지 않으면 고장으로 읽힌다. -->
+          <p class="lock" data-el="adjustnote" hidden>{t['adjust.locked']}</p>
+        </section>
+      </aside>
+    </div>
+
+  </div>
+
+  <div data-el="err" aria-live="polite"></div>
+</section>
+
+<script>
+  import { mount } from '../scripts/cropper.js';
+  const root = document.querySelector('[data-cropper]');
+  if (root) mount(root, JSON.parse(root.dataset.strings));
+</script>

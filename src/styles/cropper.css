@@ -1,0 +1,291 @@
+/*
+ * 자르기 화면 스타일. 전부 `.cropper` 아래에 가둔다 —
+ * 밖으로 새면 허브에서 가져온 global.css 와 부딪친다.
+ *
+ * 색은 직접 적지 않고 global.css 의 변수만 쓴다. 다크 모드가 거기 한 곳에 있다.
+ *
+ * 배치: 위 = 출력 설정(해상도·용량) + 결과·내려받기, 가운데 = 사진,
+ * 오른쪽 = 어떻게 자를지. 내려받기를 위에 두는 이유는 레일이 길어서다 —
+ * 아래에 두면 저장하려고 매번 스크롤을 내려야 한다.
+ * 카드를 겹겹이 쌓는 대신 실선 하나로 나눈다 — 칸이 많을수록 테두리가 늘어나
+ * 화면이 시끄러워진다.
+ */
+
+.cropper { margin: 1.5rem 0; }
+
+/* ── 사진 받기 ───────────────────────────────────────────────── */
+
+.cropper .drop {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-soft);
+  padding: 3.5rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .12s, background .12s;
+}
+.cropper .drop:hover,
+.cropper .drop:focus-visible,
+.cropper .drop.over { border-color: var(--accent); background: var(--accent-soft); }
+.cropper .drop-t { margin: 0; font-weight: 600; font-size: 1.05rem; }
+.cropper .drop-h { margin: .4rem 0 0; color: var(--fg-muted); font-size: .9rem; }
+.cropper .privacy { margin: 1.4rem 0 0; color: var(--fg-muted); font-size: .85rem; }
+
+/* ── 작업판 전체 ─────────────────────────────────────────────── */
+
+.cropper .work {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* ── 위: 출력 설정 한 줄 ─────────────────────────────────────── */
+
+.cropper .bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .6rem 1.6rem;
+  padding: .7rem .9rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-soft);
+}
+.cropper .bar-group { display: flex; align-items: center; gap: .55rem; min-width: 0; }
+.cropper .bar-k { color: var(--fg-muted); font-size: .78rem; white-space: nowrap; }
+
+/* 파일 이름은 남는 자리로 밀어 두고, 좁아지면 제일 먼저 줄어든다. */
+.cropper .bar-file {
+  margin-left: auto;
+  display: flex;
+  align-items: baseline;
+  gap: .5rem;
+  min-width: 0;
+  font-size: .8rem;
+}
+.cropper .bar-file .fname {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cropper .bar-file .fmeta { color: var(--fg-muted); white-space: nowrap; }
+
+/* ── 가운데 + 오른쪽 ─────────────────────────────────────────── */
+
+.cropper .stage { display: flex; flex-wrap: wrap; align-items: stretch; }
+
+/* 사진을 펼치는 판. 자르는 틀은 캔버스 안에 그린다 —
+   틀이 DOM 요소가 아니라서 규격 비율이 CSS 반올림에 휘둘리지 않는다. */
+.cropper .board {
+  flex: 1 1 24rem;
+  min-width: 0;
+  min-height: 26rem;
+  position: relative;       /* 캔버스를 띄우는 기준 */
+  overflow: hidden;
+  background: #24262b;      /* 사진 밖은 어둡게. 밝은 판은 사진 색을 잘못 읽게 한다 */
+}
+/*
+ * 캔버스를 절대 위치로 띄운다. 흐름 안에 두면 「판 높이 → 캔버스 높이 → 판 높이」로
+ * 크기가 서로를 물어 레일이 길어질 때 검은 여백이 남는다. 띄워 두면 캔버스는
+ * 판이 정한 높이를 그대로 채우기만 한다.
+ */
+.cropper .board canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  touch-action: none;       /* 끌 때 화면이 같이 스크롤되면 자를 수가 없다 */
+}
+.cropper .board canvas.grabbing { cursor: grabbing !important; }
+
+.cropper .rail {
+  flex: 0 0 17.5rem;
+  max-width: 100%;
+  border-left: 1px solid var(--border);
+  background: var(--bg);
+}
+.cropper .rail-s { padding: .85rem .9rem; }
+.cropper .rail-s + .rail-s { border-top: 1px solid var(--border); }
+.cropper .rail-s h2 {
+  margin: 0 0 .6rem;
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .02em;
+  color: var(--fg-muted);
+  text-transform: uppercase;
+}
+
+/* ── 규격 고르기 ─────────────────────────────────────────────── */
+
+.cropper .grp { margin: .7rem 0 .25rem; color: var(--fg-muted); font-size: .75rem; }
+.cropper .grp:first-child { margin-top: 0; }
+
+.cropper .opt {
+  display: flex;
+  align-items: baseline;
+  gap: .5rem;
+  padding: .4rem .5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: .88rem;
+  line-height: 1.35;
+}
+.cropper .opt:hover { background: var(--bg-soft); }
+.cropper .opt.on { background: var(--accent-soft); font-weight: 600; }
+.cropper .opt input { margin: 0; flex: 0 0 auto; accent-color: var(--accent); }
+.cropper .opt .nm { flex: 1; min-width: 0; }
+.cropper .opt .mm {
+  color: var(--fg-muted);
+  font-size: .76rem;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+/* 직접 입력 칸. 그 항목을 고른 동안에만 펼쳐진다. */
+.cropper .custom {
+  padding: .35rem .55rem .1rem;
+  border-left: 2px solid var(--accent);
+  margin: .15rem 0 .5rem .45rem;
+}
+.cropper .custom label {
+  display: grid;
+  grid-template-columns: 4.2rem 1fr;
+  align-items: center;
+  gap: .5rem;
+  margin: .35rem 0;
+  font-size: .82rem;
+}
+.cropper .custom input {
+  font: inherit;
+  font-size: .85rem;
+  padding: .3rem .45rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--field);
+  color: inherit;
+  width: 100%;
+}
+/* 범위 밖이면 화면에 반영하지 않는다 — 왜 안 바뀌는지 칸에서 보여야 한다. */
+.cropper .custom input.bad { border-color: var(--err); color: var(--err); }
+
+/* ── 조절 ────────────────────────────────────────────────────── */
+
+.cropper .rng {
+  display: grid;
+  grid-template-columns: 3.6rem 1fr 2.8rem;
+  align-items: center;
+  gap: .5rem;
+  margin: .45rem 0;
+  font-size: .82rem;
+}
+.cropper .rng input { width: 100%; min-width: 0; accent-color: var(--accent); }
+.cropper .rng output { text-align: right; color: var(--fg-muted); font-variant-numeric: tabular-nums; }
+.cropper .rng input:disabled { opacity: .4; }
+
+.cropper .row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem .8rem;
+  margin-top: .6rem;
+}
+.cropper .chk { display: flex; align-items: center; gap: .35rem; font-size: .82rem; cursor: pointer; }
+.cropper .chk input { accent-color: var(--accent); }
+
+/* 조작 방법. 모서리를 끌 수 있다는 걸 모르면 이 도구는 반만 쓰인다. */
+.cropper .hint { margin: 0 0 .7rem; color: var(--fg-muted); font-size: .78rem; line-height: 1.55; }
+.cropper .src { margin: .7rem 0 0; color: var(--fg-muted); font-size: .76rem; }
+.cropper .note { margin: .45rem 0 0; color: var(--fg-muted); font-size: .76rem; line-height: 1.5; }
+
+/* 보정이 잠긴 규격. 고장이 아니라 규정이라는 것이 보여야 한다. */
+.cropper .rail-s.locked .rng { opacity: .55; }
+.cropper .lock {
+  margin: .6rem 0 0;
+  color: var(--warn);
+  background: var(--warn-soft);
+  padding: .55rem .65rem;
+  border-radius: 6px;
+  font-size: .78rem;
+  line-height: 1.55;
+}
+
+/* ── 칩 ──────────────────────────────────────────────────────── */
+
+.cropper .chips { display: flex; flex-wrap: wrap; gap: .3rem; }
+.cropper .chip {
+  border: 1px solid var(--border);
+  background: var(--field);
+  color: inherit;
+  border-radius: 999px;
+  padding: .28rem .7rem;
+  font: inherit;
+  font-size: .8rem;
+  line-height: 1.3;
+  cursor: pointer;
+  transition: border-color .12s, background .12s;
+}
+.cropper .chip:hover { border-color: var(--accent); }
+.cropper .chip.on { border-color: var(--accent); background: var(--accent); color: var(--accent-fg); }
+
+/* ── 결과와 내려받기 (위에 붙는다) ───────────────────────────── */
+
+/*
+ * 결과와 내려받기. 틀 위에 있고, 스크롤해도 화면 위에 붙어 따라온다 —
+ * 레일이 길어서 아래에 두면 저장하려고 매번 내려야 한다.
+ */
+.cropper .out {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem 1.2rem;
+  align-items: center;
+  padding: .7rem .9rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--accent-soft);
+}
+.cropper .out-n { min-width: 0; }
+.cropper .px { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+.cropper .mm { margin: .15rem 0 0; color: var(--fg-muted); font-size: .8rem; }
+.cropper .saveinfo { margin: 0; color: var(--fg-muted); font-size: .8rem; }
+.cropper .acts { margin-left: auto; display: flex; gap: .5rem; flex-wrap: wrap; }
+
+.cropper button.small {
+  font: inherit;
+  font-size: .82rem;
+  padding: .4rem .8rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--field);
+  color: inherit;
+  cursor: pointer;
+}
+.cropper button.small:hover { border-color: var(--accent); }
+.cropper .acts .go {
+  font: inherit;
+  border: 0;
+  border-radius: 8px;
+  padding: .55rem 1.3rem;
+  background: var(--accent);
+  color: var(--accent-fg);
+  font-weight: 600;
+  cursor: pointer;
+}
+.cropper .acts .go:disabled { opacity: .6; cursor: default; }
+
+.cropper .msg { margin-top: 1rem; padding: .8rem 1rem; border-radius: var(--radius); font-size: .9rem; }
+.cropper .msg.err { background: var(--warn-soft); color: var(--err); }
+
+/* ── 좁은 화면 ───────────────────────────────────────────────── */
+
+@media (max-width: 52rem) {
+  /* 레일이 아래로 내려온다. 왼쪽 실선은 위쪽 실선이 되어야 경계가 맞는다. */
+  .cropper .rail { flex: 1 1 100%; border-left: 0; border-top: 1px solid var(--border); }
+}
+@media (max-width: 30rem) {
+  .cropper .drop { padding: 2.2rem .8rem; }
+  .cropper .bar-file { margin-left: 0; flex-basis: 100%; }
+  .cropper .acts { margin-left: 0; flex-basis: 100%; }
+  .cropper .acts .go { flex: 1; }
+}
