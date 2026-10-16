@@ -26,7 +26,12 @@ const MM_PER_INCH = 25.4;
 export const PRESETS = [
   { id: 'kr-resume',   group: 'kr', w: 30, h: 40, strict: false, head: [3, 5], face: [25, 30] },
   { id: 'kr-passport', group: 'kr', w: 35, h: 45, strict: true,  head: [3, 5], face: [32, 36] },
-  { id: 'us',          group: 'us', w: 51, h: 51, strict: true,  face: [25, 35], eyeFromBottom: [28, 35] },
+  /*
+   * 미국은 2×2 인치 = 50.8mm 다. 51 로 반올림하면 600dpi 에서 1205px 가 나와
+   * 국무부 온라인 제출 상한(1200×1200)을 넘는다. 50.8 이면 300dpi 600px · 600dpi 1200px 로
+   * 허용 범위(600~1200)의 양 끝에 정확히 떨어진다.
+   */
+  { id: 'us',          group: 'us', w: 50.8, h: 50.8, strict: true,  face: [25, 35], eyeFromBottom: [28, 35] },
   { id: 'jp-resume',   group: 'jp', w: 30, h: 40, strict: false, head: [3, 5], face: [25, 30] },
   { id: 'jp-passport', group: 'jp', w: 35, h: 45, strict: true,  head: [2, 6], face: [32, 36] },
 
@@ -44,8 +49,8 @@ const CUSTOM_MIN = 10, CUSTOM_MAX = 200;
 
 const DPIS = [300, 600];
 
-/** 온라인 지원 서식이 흔히 거는 제한들(KB). 0 = 제한 없음. */
-const CAPS = [0, 100, 200, 500];
+/** 온라인 지원 서식이 흔히 거는 제한들(KB). 0 = 제한 없음. 240 은 미국 비자·DV 추첨 사진의 상한. */
+const CAPS = [0, 100, 200, 240, 500];
 
 /** 판이 아무리 좁아도 이만큼은 확보한다(CSS px). 평소 높이는 판이 정한다. */
 const STAGE_MIN_H = 360;

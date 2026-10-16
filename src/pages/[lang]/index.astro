@@ -8,11 +8,13 @@
 import Tool from '../../layouts/Tool.astro';
 import Cropper from '../../components/Cropper.astro';
 import type { Locale } from '../../i18n/config';
-import { localeStaticPaths, useTranslations } from '../../i18n/utils';
+import { localeStaticPaths, localizePath, useTranslations } from '../../i18n/utils';
+import { guidesOf } from '../../i18n/guides';
 
 export const getStaticPaths = localeStaticPaths;
 const { lang } = Astro.props as { lang: Locale };
 const t = useTranslations(lang);
+const guides = guidesOf(lang);
 ---
 <Tool lang={lang} title={t('meta.title')} description={t('meta.description')}>
   <ul class="badges">
@@ -22,6 +24,16 @@ const t = useTranslations(lang);
   </ul>
 
   <Cropper lang={lang} />
+
+  {/* 하위 글로 가는 링크. 접지 않는다 — 글이 도구에서 링크를 받아야 검색에서 힘을 받는다. */}
+  {guides.length > 0 && (
+    <nav class="about guide-more" aria-label={t('guides.h')}>
+      <h2>{t('guides.h')}</h2>
+      <ul>
+        {guides.map((g) => <li><a href={localizePath(lang, `/${g.slug}`)}>{g.title}</a></li>)}
+      </ul>
+    </nav>
+  )}
 
   <section class="about">
     <details open>

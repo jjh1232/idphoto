@@ -73,7 +73,7 @@
   "about.how.h": "Where does my photo go",
   "about.how.p": "Nowhere. Cropping and saving both happen inside this browser, and there is no upload step at any point. It works with your connection turned off.",
   "about.sizes.h": "How the sizes differ by country",
-  "about.sizes.p": "US passport and visa photos are 51×51mm — two inches square, the only square format here. Korean résumé photos are 30×40mm and Korean passports, ID cards and driving licences are 35×45mm. Japan uses the same pair: 30×40mm for the résumé photo and 35×45mm for the passport. Pick one from the list and the frame takes that ratio, or enter width and height in millimetres for a size that is not listed.",
+  "about.sizes.p": "US passport and visa photos are 2×2 inches (50.8×50.8mm), the only square format here. Korean résumé photos are 30×40mm and Korean passports, ID cards and driving licences are 35×45mm. Japan uses the same pair: 30×40mm for the résumé photo and 35×45mm for the passport. Pick one from the list and the frame takes that ratio, or enter width and height in millimetres for a size that is not listed.",
   "about.face.h": "Rules about face size",
   "about.face.p": "Only passport and visa photos specify how large the face must be. The US measures from eye level: the eyes sit 28~35mm above the bottom edge and the head is 25~35mm from crown to chin. Korea asks for 3~5mm of space above the head and a 32~36mm head, Japan for 2~6mm and the same 32~36mm. Choosing one of these draws the guide lines solid. Résumé photos follow convention rather than a published rule, so their guides are drawn faintly — showing them as firm would be misleading.",
   "about.print.h": "Print resolution and file size",
@@ -90,7 +90,7 @@
   "faq.q3": "My iPhone photo (HEIC) won't open",
   "faq.a3": "No browser except Safari can read HEIC. Either set your iPhone camera format to \"Most Compatible\", or export the photo as JPG first.",
   "faq.q4": "Which size should I choose?",
-  "faq.a4": "Check what the recipient asks for first. US passport and visa photos are 51×51mm. Korean résumés and job applications use 30×40mm, and Korean passports, ID cards and driving licences use 35×45mm; Japan uses the same two. If the size you need is not listed, choose “Custom” and enter it in millimetres.",
+  "faq.a4": "Check what the recipient asks for first. US passport and visa photos are 2×2 inches (50.8mm). Korean résumés and job applications use 30×40mm, and Korean passports, ID cards and driving licences use 35×45mm; Japan uses the same two. If the size you need is not listed, choose “Custom” and enter it in millimetres.",
   "faq.q5": "My background is not white.",
   "faq.a5": "For a passport or visa photo there is no way around retaking it. Erasing or replacing a background counts as digital alteration and is grounds for rejection on its own — the US State Department's guidance is to photograph again against a correct background. Résumé photos carry no such rule.",
   "faq.q6": "I have to meet a file size limit.",
@@ -98,5 +98,8 @@
   "faq.q7": "Does it position the face automatically?",
   "faq.a7": "Not yet — it draws the guide lines and you place the photo yourself. Line the crown of the head up with the upper guide and the chin with the lower one and the result falls inside the rule. Cropping and positioning are not the kind of editing the rules prohibit.",
   "faq.q8": "Could a photo made here be rejected?",
-  "faq.a8": "What the rules prohibit is altering the face or the background; cropping and positioning are not that. Brightness and contrast do count as changing the image in software, which is why those controls are locked as soon as you choose a passport, visa or ID format."
+  "faq.a8": "What the rules prohibit is altering the face or the background; cropping and positioning are not that. Brightness and contrast do count as changing the image in software, which is why those controls are locked as soon as you choose a passport, visa or ID format.",
+  "guides.h": "Guides",
+  "guides.more": "More guides",
+  "guides.cta": "Open the ID photo cropper →"
 }
