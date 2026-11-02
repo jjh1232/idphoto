@@ -45,6 +45,7 @@ export const guidesOf = (lang: Locale) => GUIDES.filter((g) => g.lang === lang);
  * 색인하는 글의 언어. **2026-10-27 부터 한국어만.**
  * en·ja 글은 유입이 없고(구글 서치콘솔 「발견됨 - 색인 안 됨」, 네이버는 한국어만), 도구 본 페이지보다
  * 글이 훨씬 많은 사이트로 보이게 만들었다. 지우지 않고 noindex 로 둔다 — 링크·언어 전환은 산다.
+ * 2026-11-02: 그중 10-16 에 쓴 en·ja 글(전부)은 지웠다 — worker GONE 이 같은 언어 첫 페이지로 301 한다.
  * 다시 색인하려면 여기에 언어를 넣는다(사이트맵 filter 도 이 값을 본다).
  */
 export const INDEXED_GUIDE_LANGS: readonly Locale[] = ['ko'];
