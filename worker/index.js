@@ -91,12 +91,15 @@ const ADSENSE_SNIPPET = ADSENSE_ID
  *
  * 로컬(`npm run serve`)이나 file:// 더블클릭에는 Worker 가 없어서 이 주입도 없다.
  * 개발 중 클릭이 실제 방문자 수치에 섞이지 않는다는 뜻이라 이건 이득이다.
+ *
+ * 404 응답에는 애드센스를 싣지 않는다 — 게시자 정책 「인벤토리 가치」가 콘텐츠 없는 화면의
+ * 광고를 금지하고, 「가치가 별로 없는 콘텐츠」 거절(2026-11) 뒤 점검에서 걸렸다. GA 는 싣는다.
  */
 function withHeadScripts(response) {
   if (!(response.headers.get('content-type') || '').includes('text/html')) return response;
 
   return new HTMLRewriter()
-    .on('head', { element: (el) => el.append(GA_SNIPPET + ADSENSE_SNIPPET, { html: true }) })
+    .on('head', { element: (el) => el.append(GA_SNIPPET + (response.status === 404 ? '' : ADSENSE_SNIPPET), { html: true }) })
     .transform(response);
 }
 
